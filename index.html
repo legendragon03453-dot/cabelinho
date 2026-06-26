@@ -233,6 +233,112 @@
       display: block;
       object-fit: cover;
     }
+
+    /* sec2 exit — quando sec3 entra na tela */
+    .sec2-name {
+      transition: opacity 0.5s ease, transform 0.5s ease;
+    }
+    .sec2.exit .sec2-name {
+      opacity: 0;
+      transform: translateY(-28px);
+    }
+    .sec2-bio {
+      transition: opacity 0.4s ease 0.06s, transform 0.4s ease 0.06s;
+    }
+    .sec2.exit .sec2-bio {
+      opacity: 0;
+      transform: translateY(-16px);
+    }
+
+    /* ── SEÇÃO 3 ── */
+    .sec3 {
+      position: relative;
+      height: 100vh;
+      overflow: hidden;
+      background: #000;
+      --gutter: 8vw;
+    }
+
+    /* Left block: title + grid — desliza da esquerda */
+    .sec3-left {
+      position: absolute;
+      left: var(--gutter);
+      top: 50%;
+      transform: translateY(-50%) translateX(-70px);
+      opacity: 0;
+      transition: opacity 0.65s ease, transform 0.65s ease;
+      z-index: 2;
+    }
+    .sec3.revealed .sec3-left {
+      opacity: 1;
+      transform: translateY(-50%) translateX(0);
+    }
+
+    .sec3-title {
+      font-family: 'GodOfWar', serif;
+      font-size: clamp(1.8rem, 3.2vw, 3.8rem);
+      color: #fff;
+      letter-spacing: 0.05em;
+      margin-bottom: 1.1rem;
+    }
+
+    .sec3-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0.55rem;
+      width: clamp(260px, 34vw, 490px);
+    }
+
+    .sec3-grid img {
+      width: 100%;
+      aspect-ratio: 1;
+      object-fit: cover;
+      border-radius: 10px;
+      display: block;
+    }
+
+    /* Personagem — desliza da direita */
+    .sec3-char {
+      position: absolute;
+      right: -2vw;
+      bottom: 0;
+      height: 100%;
+      width: auto;
+      object-fit: contain;
+      z-index: 3;
+      opacity: 0;
+      transform: translateX(80px);
+      transition: opacity 0.65s ease 0.15s, transform 0.65s ease 0.15s;
+    }
+    .sec3.revealed .sec3-char {
+      opacity: 1;
+      transform: translateX(0);
+    }
+
+    /* 2 fotos — deslizam da direita com delay */
+    .sec3-photos {
+      position: absolute;
+      right: 27vw;
+      bottom: 11%;
+      display: flex;
+      flex-direction: column;
+      gap: 0.55rem;
+      z-index: 4;
+      opacity: 0;
+      transform: translateX(60px);
+      transition: opacity 0.65s ease 0.28s, transform 0.65s ease 0.28s;
+    }
+    .sec3.revealed .sec3-photos {
+      opacity: 1;
+      transform: translateX(0);
+    }
+
+    .sec3-photos img {
+      width: 140px;
+      height: auto;
+      border-radius: 8px;
+      display: block;
+    }
   </style>
 </head>
 
@@ -296,6 +402,35 @@
       <img
         src="https://raw.githubusercontent.com/legendragon03453-dot/cabelinho/main/export_2026-06-26T15_30_59-457Z/caido%201_1x.webp"
         alt="">
+    </div>
+
+  </section>
+
+  <!-- ── SEÇÃO 3 ── -->
+  <section class="sec3" id="sec3">
+
+    <!-- Left: título + grid de álbuns -->
+    <div class="sec3-left">
+      <h2 class="sec3-title">Albuns</h2>
+      <div class="sec3-grid">
+        <img src="https://raw.githubusercontent.com/legendragon03453-dot/cabelinho/main/ALBINS/CO%20C%201%201_1x.webp" alt="">
+        <img src="https://raw.githubusercontent.com/legendragon03453-dot/cabelinho/main/ALBINS/CO%20C%202%201_1x.webp" alt="">
+        <img src="https://raw.githubusercontent.com/legendragon03453-dot/cabelinho/main/ALBINS/CO%20C%203%201_1x.webp" alt="">
+        <img src="https://raw.githubusercontent.com/legendragon03453-dot/cabelinho/main/ALBINS/CO%20C%204%201_1x.webp" alt="">
+        <img src="https://raw.githubusercontent.com/legendragon03453-dot/cabelinho/main/ALBINS/CO%20C%205%201_1x.webp" alt="">
+        <img src="https://raw.githubusercontent.com/legendragon03453-dot/cabelinho/main/ALBINS/CO%20C%206%201_1x.webp" alt="">
+      </div>
+    </div>
+
+    <!-- Personagem — direita -->
+    <img class="sec3-char"
+      src="https://raw.githubusercontent.com/legendragon03453-dot/cabelinho/main/PERSONAGEM.webp"
+      alt="MC Cabelinho">
+
+    <!-- 2 fotos — centro-direita -->
+    <div class="sec3-photos">
+      <img src="https://raw.githubusercontent.com/legendragon03453-dot/cabelinho/main/export_2026-06-26T15_30_59-457Z/cabeli%201_1x.webp" alt="">
+      <img src="https://raw.githubusercontent.com/legendragon03453-dot/cabelinho/main/export_2026-06-26T15_30_59-457Z/caido%201_1x.webp" alt="">
     </div>
 
   </section>
@@ -385,6 +520,20 @@
         sec2Video.play().catch(() => {});
       }
     }, { threshold: 0.01 }).observe(sec2);
+
+    // ── SEÇÃO 3 ────────────────────────────────────────────────
+    const sec3 = document.getElementById('sec3');
+
+    new IntersectionObserver(([entry]) => {
+      if (entry.isIntersecting) {
+        sec2.classList.add('exit');
+        sec3.classList.add('revealed');
+      } else if (entry.boundingClientRect.top > 0) {
+        // usuário scrollou de volta para cima
+        sec2.classList.remove('exit');
+        sec3.classList.remove('revealed');
+      }
+    }, { threshold: 0.1 }).observe(sec3);
   </script>
 
 </body>
