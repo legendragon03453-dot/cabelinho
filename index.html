@@ -265,9 +265,9 @@
   <section class="sec2" id="sec2">
 
     <!-- BG: luzes piscando, borrado e translúcido -->
-    <video class="sec2-bg" autoplay loop muted playsinline webkit-playsinline>
+    <video class="sec2-bg" id="sec2Video" muted playsinline webkit-playsinline preload="none">
       <source
-        src="https://raw.githubusercontent.com/legendragon03453-dot/cabelinho/main/Luzes_piscando_sala_sombria_202606260254.mp4"
+        data-src="https://raw.githubusercontent.com/legendragon03453-dot/cabelinho/main/Luzes_piscando_sala_sombria_202606260254.mp4"
         type="video/mp4">
     </video>
 
@@ -369,12 +369,22 @@
 
     scrub();
 
-    // ── REVEAL SEÇÃO 2 ─────────────────────────────────────────
+    // ── REVEAL + LAZY LOAD SEÇÃO 2 ────────────────────────────
     const sec2 = document.getElementById('sec2');
-    new IntersectionObserver(
-      ([entry]) => { if (entry.isIntersecting) sec2.classList.add('revealed'); },
-      { threshold: 0.01 }
-    ).observe(sec2);
+    const sec2Video = document.getElementById('sec2Video');
+    let sec2Loaded = false;
+
+    new IntersectionObserver(([entry]) => {
+      if (!entry.isIntersecting) return;
+      sec2.classList.add('revealed');
+      if (!sec2Loaded) {
+        sec2Loaded = true;
+        const source = sec2Video.querySelector('source');
+        source.src = source.dataset.src;
+        sec2Video.load();
+        sec2Video.play().catch(() => {});
+      }
+    }, { threshold: 0.01 }).observe(sec2);
   </script>
 
 </body>
