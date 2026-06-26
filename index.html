@@ -12,332 +12,130 @@
       font-display: block;
     }
 
-    *,
-    *::before,
-    *::after {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-
-    html {
-      scroll-behavior: auto;
-    }
-
-    body {
-      background: #000;
-      overflow-x: hidden;
-    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: auto; }
+    body { background: #000; overflow-x: hidden; }
 
     /* ── SCROLL SCENE ── */
-    .scroll-scene {
-      position: relative;
-      height: 220vh;
-    }
-
-    /* Sticky: fica fixo na tela enquanto o usuário scrolla */
+    .scroll-scene { position: relative; height: 220vh; }
     .sticky-frame {
-      position: sticky;
-      top: 0;
-      height: 100vh;
-      width: 100%;
-      overflow: hidden;
-      background: #000;
+      position: sticky; top: 0; height: 100vh; width: 100%;
+      overflow: hidden; background: #000;
     }
-
-    /* ── VIDEO ── */
-    .bg-video {
-      position: absolute;
-      inset: 0;
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      display: block;
-    }
-
-    /* Gradiente no rodapé para o texto ficar legível */
+    .bg-video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; }
     .overlay {
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(to top,
-          rgba(0, 0, 0, 0.80) 0%,
-          rgba(0, 0, 0, 0.25) 40%,
-          rgba(0, 0, 0, 0.00) 100%);
+      position: absolute; inset: 0;
+      background: linear-gradient(to top, rgba(0,0,0,0.80) 0%, rgba(0,0,0,0.25) 40%, rgba(0,0,0,0) 100%);
       pointer-events: none;
     }
-
-    /* ── FADE TO BLACK ── */
-    /* Sobe de 0 → 1 no final do scroll */
-    #blackout {
-      position: absolute;
-      inset: 0;
-      background: #000;
-      opacity: 0;
-      pointer-events: none;
-      z-index: 5;
-    }
-
-    /* ── TEXTO ── */
+    #blackout { position: absolute; inset: 0; background: #000; opacity: 0; pointer-events: none; z-index: 5; }
     .hero-text {
-      position: absolute;
-      bottom: 14%;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 90vw;
-      text-align: center;
-      color: #fff;
-      z-index: 4;
+      position: absolute; bottom: 14%; left: 50%; transform: translateX(-50%);
+      width: 90vw; text-align: center; color: #fff; z-index: 4;
     }
-
     .hero-title {
       font-family: 'GodOfWar', serif;
       font-size: calc(clamp(2rem, 5.5vw, 5.5rem) + 3px);
-      color: #fff;
-      line-height: 1;
-      letter-spacing: 0.05em;
-      text-shadow: 0 2px 32px rgba(0, 0, 0, 0.75);
-      white-space: nowrap;
+      color: #fff; line-height: 1; letter-spacing: 0.05em;
+      text-shadow: 0 2px 32px rgba(0,0,0,0.75); white-space: nowrap;
     }
 
     /* ── LOADER ── */
     .loader {
-      position: absolute;
-      inset: 0;
-      background: #000;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      z-index: 20;
-      transition: opacity 0.6s ease;
+      position: absolute; inset: 0; background: #000;
+      display: flex; align-items: center; justify-content: center;
+      z-index: 20; transition: opacity 0.6s ease;
     }
-
-    .loader.gone {
-      opacity: 0;
-      pointer-events: none;
-    }
-
+    .loader.gone { opacity: 0; pointer-events: none; }
     .loader-ring {
-      width: 34px;
-      height: 34px;
-      border: 2px solid rgba(255, 255, 255, 0.1);
-      border-top-color: rgba(255, 255, 255, 0.75);
-      border-radius: 50%;
-      animation: spin 0.85s linear infinite;
+      width: 34px; height: 34px;
+      border: 2px solid rgba(255,255,255,0.1);
+      border-top-color: rgba(255,255,255,0.75);
+      border-radius: 50%; animation: spin 0.85s linear infinite;
     }
-
-    @keyframes spin {
-      to {
-        transform: rotate(360deg);
-      }
-    }
+    @keyframes spin { to { transform: rotate(360deg); } }
 
     /* ── SEÇÃO 2 ── */
     .sec2 {
-      position: relative;
-      height: 100vh;
-      overflow: hidden;
-      background: #040005;
-      opacity: 0;
-      transition: opacity 0.35s ease;
+      position: relative; height: 100vh; overflow: hidden;
+      background: #040005; opacity: 0; transition: opacity 0.35s ease;
+      --gutter: 14vw;
     }
+    .sec2.revealed { opacity: 1; }
 
-    .sec2.revealed {
-      opacity: 1;
-    }
-
-    /* Video BG: blur leve + fade leve */
     .sec2-bg {
-      position: absolute;
-      inset: -2%;
-      width: 104%;
-      height: 104%;
-      object-fit: cover;
-      filter: blur(2px);
-      opacity: 0.72;
+      position: absolute; inset: -2%; width: 104%; height: 104%;
+      object-fit: cover; filter: blur(2px); opacity: 0.72;
     }
-
-    /* Gradiente preto no topo e no rodapé */
     .sec2-dark {
-      position: absolute;
-      inset: 0;
+      position: absolute; inset: 0;
       background: linear-gradient(to bottom,
-        rgba(0, 0, 0, 0.88) 0%,
-        rgba(0, 0, 0, 0.00) 28%,
-        rgba(0, 0, 0, 0.00) 72%,
-        rgba(0, 0, 0, 0.88) 100%);
+        rgba(0,0,0,0.88) 0%, rgba(0,0,0,0) 28%,
+        rgba(0,0,0,0) 72%, rgba(0,0,0,0.88) 100%);
       z-index: 1;
     }
 
-    /* Margem comum — alinha heading, parágrafo e imagens */
-    .sec2 {
-      --gutter: 14vw;
-    }
-
-    /* "CABELINHO" — mais ao centro, alinhado com parágrafo */
     .sec2-name {
-      position: absolute;
-      bottom: 36%;
-      left: var(--gutter);
-      transform: none;
-      font-family: 'GodOfWar', serif;
-      font-size: clamp(3rem, 11vw, 13rem);
-      white-space: nowrap;
-      color: #fff;
-      line-height: 1;
-      letter-spacing: 0.02em;
-      z-index: 2;
-      pointer-events: none;
-      user-select: none;
-    }
-
-    /* Personagem — centralizado, à frente do título */
-    .sec2-char {
-      position: absolute;
-      bottom: 0;
-      left: 50%;
-      transform: translateX(-50%);
-      height: 96%;
-      width: auto;
-      object-fit: contain;
-      z-index: 3;
-    }
-
-    /* Parágrafo — pequeno gap abaixo da head */
-    .sec2-bio {
-      position: absolute;
-      bottom: calc(20% - 6px);
-      left: var(--gutter);
-      max-width: 260px;
-      font-family: Helvetica, 'Helvetica Neue', Arial, sans-serif;
-      font-size: 0.8rem;
-      line-height: 1.75;
-      color: rgba(255, 255, 255, 0.82);
-      font-weight: 400;
-      z-index: 5;
-    }
-
-    /* Fotos — mesmo bottom do parágrafo, alinhadas à direita simétricamente */
-    .sec2-photos {
-      position: absolute;
-      right: var(--gutter);
-      bottom: calc(20% - 3px);
-      display: flex;
-      flex-direction: row;
-      gap: 0.75rem;
-      z-index: 5;
-    }
-
-    .sec2-photos img {
-      width: 120px;
-      height: auto;
-      display: block;
-      object-fit: cover;
-    }
-
-    /* sec2 exit — quando sec3 entra na tela */
-    .sec2-name {
+      position: absolute; bottom: 36%; left: var(--gutter);
+      font-family: 'GodOfWar', serif; font-size: clamp(3rem, 11vw, 13rem);
+      white-space: nowrap; color: #fff; line-height: 1; letter-spacing: 0.02em;
+      z-index: 2; pointer-events: none; user-select: none;
       transition: opacity 0.5s ease, transform 0.5s ease;
     }
-    .sec2.exit .sec2-name {
-      opacity: 0;
-      transform: translateY(-28px);
-    }
+    .sec2.exit .sec2-name { opacity: 0; transform: translateY(-28px); }
+
     .sec2-bio {
+      position: absolute; bottom: calc(20% - 6px); left: var(--gutter);
+      max-width: 260px; font-family: Helvetica, 'Helvetica Neue', Arial, sans-serif;
+      font-size: 0.8rem; line-height: 1.75; color: rgba(255,255,255,0.82);
+      font-weight: 400; z-index: 5;
       transition: opacity 0.4s ease 0.06s, transform 0.4s ease 0.06s;
     }
-    .sec2.exit .sec2-bio {
-      opacity: 0;
-      transform: translateY(-16px);
+    .sec2.exit .sec2-bio { opacity: 0; transform: translateY(-16px); }
+
+    /* ── PERSONAGEM + FOTOS: fixed, controlados por JS ── */
+    .shared-char {
+      position: fixed; bottom: 0; height: 96%; width: auto;
+      object-fit: contain; z-index: 50; pointer-events: none;
+      opacity: 0; will-change: left, opacity;
+    }
+    .shared-photos {
+      position: fixed; display: flex; flex-direction: column;
+      gap: 0.55rem; z-index: 51; pointer-events: none;
+      opacity: 0; will-change: right, bottom, opacity;
+    }
+    .shared-photos img {
+      width: 140px; height: auto; border-radius: 8px; display: block;
     }
 
     /* ── SEÇÃO 3 ── */
     .sec3 {
-      position: relative;
-      height: 100vh;
-      overflow: hidden;
-      background: #000;
-      --gutter: 8vw;
+      position: relative; height: 100vh; overflow: hidden;
+      background: #000; --gutter: 8vw;
     }
 
-    /* Left block: title + grid — desliza da esquerda */
     .sec3-left {
-      position: absolute;
-      left: var(--gutter);
-      top: 50%;
+      position: absolute; left: var(--gutter); top: 50%;
       transform: translateY(-50%) translateX(-70px);
-      opacity: 0;
-      transition: opacity 0.65s ease, transform 0.65s ease;
+      opacity: 0; transition: opacity 0.65s ease, transform 0.65s ease;
       z-index: 2;
     }
-    .sec3.revealed .sec3-left {
-      opacity: 1;
-      transform: translateY(-50%) translateX(0);
-    }
+    .sec3.revealed .sec3-left { opacity: 1; transform: translateY(-50%) translateX(0); }
 
     .sec3-title {
       font-family: 'GodOfWar', serif;
       font-size: clamp(1.8rem, 3.2vw, 3.8rem);
-      color: #fff;
-      letter-spacing: 0.05em;
-      margin-bottom: 1.1rem;
+      color: #fff; letter-spacing: 0.05em;
+      margin-bottom: 1.1rem; text-align: center;
     }
 
     .sec3-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 0.55rem;
-      width: clamp(260px, 34vw, 490px);
+      display: grid; grid-template-columns: repeat(3, 1fr);
+      gap: 0.55rem; width: clamp(260px, 34vw, 490px);
     }
-
     .sec3-grid img {
-      width: 100%;
-      aspect-ratio: 1;
-      object-fit: cover;
-      border-radius: 10px;
-      display: block;
-    }
-
-    /* Personagem — desliza da direita */
-    .sec3-char {
-      position: absolute;
-      right: -2vw;
-      bottom: 0;
-      height: 100%;
-      width: auto;
-      object-fit: contain;
-      z-index: 3;
-      opacity: 0;
-      transform: translateX(80px);
-      transition: opacity 0.65s ease 0.15s, transform 0.65s ease 0.15s;
-    }
-    .sec3.revealed .sec3-char {
-      opacity: 1;
-      transform: translateX(0);
-    }
-
-    /* 2 fotos — deslizam da direita com delay */
-    .sec3-photos {
-      position: absolute;
-      right: 27vw;
-      bottom: 11%;
-      display: flex;
-      flex-direction: column;
-      gap: 0.55rem;
-      z-index: 4;
-      opacity: 0;
-      transform: translateX(60px);
-      transition: opacity 0.65s ease 0.28s, transform 0.65s ease 0.28s;
-    }
-    .sec3.revealed .sec3-photos {
-      opacity: 1;
-      transform: translateX(0);
-    }
-
-    .sec3-photos img {
-      width: 140px;
-      height: auto;
-      border-radius: 8px;
-      display: block;
+      width: 100%; aspect-ratio: 1; object-fit: cover;
+      border-radius: 10px; display: block;
     }
   </style>
 </head>
@@ -346,70 +144,37 @@
 
   <section class="scroll-scene" id="scene">
     <div class="sticky-frame">
-
-      <div class="loader" id="loader">
-        <div class="loader-ring"></div>
-      </div>
-
+      <div class="loader" id="loader"><div class="loader-ring"></div></div>
       <video class="bg-video" id="bgVideo" muted playsinline preload="auto" webkit-playsinline crossorigin="anonymous">
-        <source src="https://raw.githubusercontent.com/legendragon03453-dot/cabelinho/main/MUDNACA%20CRIA.mp4"
-          type="video/mp4">
+        <source src="https://raw.githubusercontent.com/legendragon03453-dot/cabelinho/main/MUDNACA%20CRIA.mp4" type="video/mp4">
       </video>
-
       <div class="overlay"></div>
-
       <div id="blackout"></div>
-
       <div class="hero-text" id="heroText">
         <h1 class="hero-title">GOD OF CABELINHO</h1>
       </div>
-
     </div>
   </section>
 
   <!-- ── SEÇÃO 2 ── -->
   <section class="sec2" id="sec2">
-
-    <!-- BG: luzes piscando, borrado e translúcido -->
     <video class="sec2-bg" id="sec2Video" muted playsinline webkit-playsinline preload="none">
       <source
         data-src="https://raw.githubusercontent.com/legendragon03453-dot/cabelinho/main/Luzes_piscando_sala_sombria_202606260254.webm"
         type="video/webm">
     </video>
-
     <div class="sec2-dark"></div>
-
-    <!-- "CABELINHO" atrás do personagem (z-index 2) -->
     <h2 class="sec2-name">CABELINHO</h2>
-
-    <!-- Personagem centralizado na frente do título (z-index 3) -->
-    <img class="sec2-char" src="https://raw.githubusercontent.com/legendragon03453-dot/cabelinho/main/PERSONAGEM.webp"
-      alt="MC Cabelinho">
-
-    <!-- Parágrafo central-esquerdo -->
     <p class="sec2-bio">
       Victor Hugo Oliveira do Nascimento, mais conhecido como MC Cabelinho,
       é um cantor, compositor e ator brasileiro. Em 2019, estreou na atuação
       interpretando Farula, na telenovela Amor de Mãe. Cabelinho é um dos
       representantes do rap e do funk carioca.
     </p>
-
-    <!-- Duas fotos à direita -->
-    <div class="sec2-photos">
-      <img
-        src="https://raw.githubusercontent.com/legendragon03453-dot/cabelinho/main/export_2026-06-26T15_30_59-457Z/cabeli%201_1x.webp"
-        alt="">
-      <img
-        src="https://raw.githubusercontent.com/legendragon03453-dot/cabelinho/main/export_2026-06-26T15_30_59-457Z/caido%201_1x.webp"
-        alt="">
-    </div>
-
   </section>
 
   <!-- ── SEÇÃO 3 ── -->
   <section class="sec3" id="sec3">
-
-    <!-- Left: título + grid de álbuns -->
     <div class="sec3-left">
       <h2 class="sec3-title">Albuns</h2>
       <div class="sec3-grid">
@@ -421,91 +186,122 @@
         <img src="https://raw.githubusercontent.com/legendragon03453-dot/cabelinho/main/ALBINS/CO%20C%206%201_1x.webp" alt="">
       </div>
     </div>
-
-    <!-- Personagem — direita -->
-    <img class="sec3-char"
-      src="https://raw.githubusercontent.com/legendragon03453-dot/cabelinho/main/PERSONAGEM.webp"
-      alt="MC Cabelinho">
-
-    <!-- 2 fotos — centro-direita -->
-    <div class="sec3-photos">
-      <img src="https://raw.githubusercontent.com/legendragon03453-dot/cabelinho/main/export_2026-06-26T15_30_59-457Z/cabeli%201_1x.webp" alt="">
-      <img src="https://raw.githubusercontent.com/legendragon03453-dot/cabelinho/main/export_2026-06-26T15_30_59-457Z/caido%201_1x.webp" alt="">
-    </div>
-
   </section>
 
+  <!-- Personagem e fotos: elemento compartilhado, posicionado por JS -->
+  <img id="sharedChar" class="shared-char"
+    src="https://raw.githubusercontent.com/legendragon03453-dot/cabelinho/main/PERSONAGEM.webp"
+    alt="MC Cabelinho">
+  <div id="sharedPhotos" class="shared-photos">
+    <img src="https://raw.githubusercontent.com/legendragon03453-dot/cabelinho/main/export_2026-06-26T15_30_59-457Z/cabeli%201_1x.webp" alt="">
+    <img src="https://raw.githubusercontent.com/legendragon03453-dot/cabelinho/main/export_2026-06-26T15_30_59-457Z/caido%201_1x.webp" alt="">
+  </div>
+
   <script>
-    const scene = document.getElementById('scene');
-    const video = document.getElementById('bgVideo');
+    const scene    = document.getElementById('scene');
+    const video    = document.getElementById('bgVideo');
     const heroText = document.getElementById('heroText');
     const blackout = document.getElementById('blackout');
-    const loader = document.getElementById('loader');
+    const loader   = document.getElementById('loader');
+    const sec2     = document.getElementById('sec2');
+    const sec3     = document.getElementById('sec3');
+    const sharedChar   = document.getElementById('sharedChar');
+    const sharedPhotos = document.getElementById('sharedPhotos');
 
     // ── LOADER ─────────────────────────────────────────────────
     function hideLoader() { loader.classList.add('gone'); }
     video.addEventListener('canplay', hideLoader);
     video.addEventListener('loadeddata', hideLoader);
-    setTimeout(hideLoader, 5000); // fallback
-
-    // ── VIDEO: mostra o primeiro frame assim que os metadados carregam
-    video.addEventListener('loadedmetadata', () => {
-      video.currentTime = 0.001;
-    });
+    setTimeout(hideLoader, 5000);
+    video.addEventListener('loadedmetadata', () => { video.currentTime = 0.001; });
 
     // ── SCROLL SCRUB ───────────────────────────────────────────
-    //
-    //  Análise do vídeo (MUDNACA CRIA.mp4, 2.933s, 30fps):
-    //  A transição escura começa em t≈1.35s e completa em t≈1.467s.
-    //  O texto some exatamente nessa janela.
-    //
-    const FADE_START = 1.35;   // segundo em que o texto começa a sair
-    const FADE_END = 1.47;   // segundo em que o texto está completamente gone
+    const FADE_START = 1.35;
+    const FADE_END   = 1.47;
 
+    function easeInOut(t) { return t < 0.5 ? 2*t*t : -1 + (4 - 2*t)*t; }
+
+    // ── SHARED ELEMENT: personagem + fotos ─────────────────────
+    function updateSharedElements() {
+      const sec2Rect = sec2.getBoundingClientRect();
+      const sec3Rect = sec3.getBoundingClientRect();
+      const vw = window.innerWidth;
+      const vh = window.innerHeight;
+
+      const inSec2 = sec2Rect.bottom > 0 && sec2Rect.top < vh;
+      const inSec3 = sec3Rect.bottom > 0 && sec3Rect.top < vh;
+
+      if (!inSec2 && !inSec3) {
+        sharedChar.style.opacity = '0';
+        sharedPhotos.style.opacity = '0';
+        return;
+      }
+
+      sharedChar.style.opacity = '1';
+      sharedPhotos.style.opacity = '1';
+
+      // t=0: totalmente em sec2  |  t=1: totalmente em sec3
+      let t = 0;
+      if (inSec3) {
+        t = Math.max(0, Math.min(1, (vh - sec3Rect.top) / vh));
+      }
+      const te = easeInOut(t);
+
+      const charW = sharedChar.offsetWidth || vw * 0.38;
+
+      // Personagem: centro → direita
+      const charLeft0 = (vw - charW) / 2;
+      const charLeft1 = vw * 0.98 - charW;
+      sharedChar.style.left = (charLeft0 + (charLeft1 - charLeft0) * te) + 'px';
+
+      // Fotos: bottom-right de sec2 → centro-direita de sec3
+      const photo0Right  = vw  * 0.14;
+      const photo1Right  = vw  * 0.27;
+      const photo0Bottom = vh  * 0.197;
+      const photo1Bottom = vh  * 0.11;
+
+      sharedPhotos.style.right  = (photo0Right  + (photo1Right  - photo0Right)  * te) + 'px';
+      sharedPhotos.style.bottom = (photo0Bottom + (photo1Bottom - photo0Bottom) * te) + 'px';
+    }
+
+    // ── RAF LOOP ───────────────────────────────────────────────
     let rafPending = false;
 
     function scrub() {
       rafPending = false;
 
-      const rect = scene.getBoundingClientRect();
+      const rect        = scene.getBoundingClientRect();
       const totalScroll = scene.offsetHeight - window.innerHeight;
-      const scrolled = Math.max(0, -rect.top);
-      const progress = Math.min(1, scrolled / totalScroll);
+      const scrolled    = Math.max(0, -rect.top);
+      const progress    = Math.min(1, scrolled / totalScroll);
 
-      // Mapeia scroll → video.currentTime
       if (video.readyState >= 2 && video.duration) {
         const target = progress * video.duration;
-        if (Math.abs(video.currentTime - target) > 0.033) {
-          video.currentTime = target;
-        }
+        if (Math.abs(video.currentTime - target) > 0.033) video.currentTime = target;
       }
 
-      // Fade do texto sincronizado com video.currentTime (não com scroll %)
       const ct = video.currentTime;
       if (ct >= FADE_END) {
         heroText.style.opacity = '0';
       } else if (ct >= FADE_START) {
-        const f = (ct - FADE_START) / (FADE_END - FADE_START); // 0 → 1
+        const f = (ct - FADE_START) / (FADE_END - FADE_START);
         heroText.style.opacity = Math.max(0, 1 - f).toFixed(3);
       } else {
         if (heroText.style.opacity !== '1') heroText.style.opacity = '1';
       }
 
-      // Blackout não é mais necessário — o próprio vídeo fica preto
       blackout.style.opacity = '0';
+
+      updateSharedElements();
     }
 
     window.addEventListener('scroll', () => {
-      if (!rafPending) {
-        rafPending = true;
-        requestAnimationFrame(scrub);
-      }
+      if (!rafPending) { rafPending = true; requestAnimationFrame(scrub); }
     }, { passive: true });
 
     scrub();
 
-    // ── REVEAL + LAZY LOAD SEÇÃO 2 ────────────────────────────
-    const sec2 = document.getElementById('sec2');
+    // ── REVEAL + LAZY LOAD SEÇÃO 2 ─────────────────────────────
     const sec2Video = document.getElementById('sec2Video');
     let sec2Loaded = false;
 
@@ -521,15 +317,12 @@
       }
     }, { threshold: 0.01 }).observe(sec2);
 
-    // ── SEÇÃO 3 ────────────────────────────────────────────────
-    const sec3 = document.getElementById('sec3');
-
+    // ── SEC2 EXIT + SEC3 REVEAL ────────────────────────────────
     new IntersectionObserver(([entry]) => {
       if (entry.isIntersecting) {
         sec2.classList.add('exit');
         sec3.classList.add('revealed');
       } else if (entry.boundingClientRect.top > 0) {
-        // usuário scrollou de volta para cima
         sec2.classList.remove('exit');
         sec3.classList.remove('revealed');
       }
