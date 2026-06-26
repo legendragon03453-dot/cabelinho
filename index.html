@@ -228,10 +228,11 @@
       const vw = window.innerWidth;
       const vh = window.innerHeight;
 
-      const inSec2 = sec2Rect.bottom > 0 && sec2Rect.top < vh;
       const inSec3 = sec3Rect.bottom > 0 && sec3Rect.top < vh;
+      // Personagem só aparece quando sec2 está COMPLETAMENTE na tela (top <= 0)
+      const sec2Ready = sec2Rect.top <= 0 && sec2Rect.bottom > 0;
 
-      if (!inSec2 && !inSec3) {
+      if (!sec2Ready && !inSec3) {
         sharedChar.style.opacity = '0';
         sharedPhotos.style.opacity = '0';
         return;
