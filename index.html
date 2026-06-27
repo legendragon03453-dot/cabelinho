@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
-
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -58,9 +57,10 @@
     /* ── SEÇÃO 2 ── */
     .sec2 {
       position: relative; height: 100vh; overflow: hidden;
-      background: #040005;
+      background: #040005; opacity: 0; transition: opacity 0.35s ease;
       --gutter: 14vw;
     }
+    .sec2.revealed { opacity: 1; }
 
     .sec2-bg {
       position: absolute; inset: -2%; width: 104%; height: 104%;
@@ -94,7 +94,7 @@
 
     /* ── PERSONAGEM + FOTOS: fixed, controlados por JS ── */
     .shared-char {
-      position: fixed; bottom: 0; height: 96%; width: auto;
+      position: fixed; bottom: 0; height: 75%; width: auto;
       object-fit: contain; z-index: 50; pointer-events: none;
       opacity: 0; will-change: left, opacity;
     }
@@ -136,6 +136,76 @@
       width: 100%; aspect-ratio: 1; object-fit: cover;
       border-radius: 10px; display: block;
     }
+
+    /* ── SEÇÃO 4 ── */
+    .sec4 {
+      position: relative; min-height: 100vh; background: #000;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      padding: 4rem 0; overflow: hidden;
+    }
+
+    .marquee-container {
+      position: relative; /* Adicionado para ancorar o placeholder */
+      width: 100%; overflow: hidden;
+      mask-image: linear-gradient(to right, transparent, black 15%, black 85%, transparent);
+      -webkit-mask-image: linear-gradient(to right, transparent, black 15%, black 85%, transparent);
+      margin-bottom: 3.5rem;
+    }
+
+    .marquee-track-placeholder {
+      position: absolute; left: 0; top: 0;
+      display: flex; gap: 1.5rem; width: max-content;
+      opacity: 0; pointer-events: none; /* Invisível, serve apenas como alvo matemático */
+    }
+
+    .marquee-track {
+      display: flex; gap: 1.5rem; width: max-content;
+      animation: marquee 20s linear infinite;
+      transition: opacity 0.2s ease;
+    }
+
+    .marquee-track-placeholder img,
+    .marquee-track img {
+      width: 240px; height: 240px; object-fit: cover; border-radius: 16px; display: block;
+    }
+
+    @keyframes marquee {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(calc(-50% - 0.75rem)); }
+    }
+
+    .sec4-text {
+      color: #fff; font-family: Helvetica, 'Helvetica Neue', Arial, sans-serif;
+      font-size: clamp(1.2rem, 3vw, 2rem); margin-bottom: 2.5rem; text-align: center;
+      letter-spacing: 0.02em;
+    }
+
+    .sec4-text strong {
+      font-weight: 700;
+    }
+
+    .sec4-btn {
+      background: linear-gradient(to bottom, #fceeb5 0%, #e2b740 40%, #a47514 100%);
+      color: #000; font-family: 'Times New Roman', Times, serif; font-weight: 900;
+      text-decoration: none; padding: 1rem 3.5rem; font-size: 1.1rem;
+      border-radius: 3px; text-transform: uppercase; letter-spacing: 0.1em;
+      box-shadow: 0 4px 15px rgba(226, 183, 64, 0.2);
+      transition: transform 0.3s ease, filter 0.3s ease;
+    }
+
+    .sec4-btn:hover {
+      transform: scale(1.05); filter: brightness(1.15);
+    }
+
+    /* ── TRANSIÇÃO DOS ÁLBUNS ── */
+    .shared-albums {
+      position: fixed; inset: 0; z-index: 60; pointer-events: none;
+      opacity: 0; visibility: hidden;
+    }
+    .shared-albums img {
+      position: absolute; top: 0; left: 0; object-fit: cover;
+      will-change: transform, width, height, border-radius;
+    }
   </style>
 </head>
 
@@ -143,24 +213,22 @@
 
   <section class="scroll-scene" id="scene">
     <div class="sticky-frame">
-      <div class="loader" id="loader"><div class="loader-ring"></div></div>
-      <video class="bg-video" id="bgVideo" muted playsinline preload="auto" webkit-playsinline crossorigin="anonymous">
+      <div class="loader gone" id="loader"><div class="loader-ring"></div></div>
+      <video class="bg-video" id="bgVideo" muted="" playsinline="" preload="auto" webkit-playsinline="" crossorigin="anonymous">
         <source src="https://raw.githubusercontent.com/legendragon03453-dot/cabelinho/main/MUDNACA%20CRIA.mp4" type="video/mp4">
       </video>
       <div class="overlay"></div>
-      <div id="blackout"></div>
-      <div class="hero-text" id="heroText">
+      <div id="blackout" style="opacity: 0;"></div>
+      <div class="hero-text" id="heroText" style="opacity: 1;">
         <h1 class="hero-title">GOD OF CABELINHO</h1>
       </div>
     </div>
   </section>
 
   <!-- ── SEÇÃO 2 ── -->
-  <section class="sec2" id="sec2">
-    <video class="sec2-bg" id="sec2Video" muted playsinline webkit-playsinline preload="none">
-      <source
-        data-src="https://raw.githubusercontent.com/legendragon03453-dot/cabelinho/main/Luzes_piscando_sala_sombria_202606260254.webm"
-        type="video/webm">
+  <section class="sec2 revealed" id="sec2">
+    <video class="sec2-bg" id="sec2Video" muted="" playsinline="" webkit-playsinline="" preload="none">
+      <source data-src="https://raw.githubusercontent.com/legendragon03453-dot/cabelinho/main/Luzes_piscando_sala_sombria_202606260254.webm" type="video/webm" src="https://raw.githubusercontent.com/legendragon03453-dot/cabelinho/main/Luzes_piscando_sala_sombria_202606260254.webm">
     </video>
     <div class="sec2-dark"></div>
     <h2 class="sec2-name">CABELINHO</h2>
@@ -187,13 +255,55 @@
     </div>
   </section>
 
+  <!-- ── SEÇÃO 4 ── -->
+  <section class="sec4" id="sec4">
+    <div class="marquee-container">
+      <!-- Target Invisível para o cálculo das posições -->
+      <div class="marquee-track-placeholder" id="marqueePlaceholder">
+        <img src="https://raw.githubusercontent.com/legendragon03453-dot/cabelinho/main/ALBINS/CO%20C%201%201_1x.webp" alt="">
+        <img src="https://raw.githubusercontent.com/legendragon03453-dot/cabelinho/main/ALBINS/CO%20C%202%201_1x.webp" alt="">
+        <img src="https://raw.githubusercontent.com/legendragon03453-dot/cabelinho/main/ALBINS/CO%20C%203%201_1x.webp" alt="">
+        <img src="https://raw.githubusercontent.com/legendragon03453-dot/cabelinho/main/ALBINS/CO%20C%204%201_1x.webp" alt="">
+        <img src="https://raw.githubusercontent.com/legendragon03453-dot/cabelinho/main/ALBINS/CO%20C%205%201_1x.webp" alt="">
+        <img src="https://raw.githubusercontent.com/legendragon03453-dot/cabelinho/main/ALBINS/CO%20C%206%201_1x.webp" alt="">
+      </div>
+
+      <div class="marquee-track" id="marqueeTrack">
+        <!-- Grupo 1 -->
+        <img src="https://raw.githubusercontent.com/legendragon03453-dot/cabelinho/main/ALBINS/CO%20C%201%201_1x.webp" alt="">
+        <img src="https://raw.githubusercontent.com/legendragon03453-dot/cabelinho/main/ALBINS/CO%20C%202%201_1x.webp" alt="">
+        <img src="https://raw.githubusercontent.com/legendragon03453-dot/cabelinho/main/ALBINS/CO%20C%203%201_1x.webp" alt="">
+        <img src="https://raw.githubusercontent.com/legendragon03453-dot/cabelinho/main/ALBINS/CO%20C%204%201_1x.webp" alt="">
+        <img src="https://raw.githubusercontent.com/legendragon03453-dot/cabelinho/main/ALBINS/CO%20C%205%201_1x.webp" alt="">
+        <img src="https://raw.githubusercontent.com/legendragon03453-dot/cabelinho/main/ALBINS/CO%20C%206%201_1x.webp" alt="">
+        <!-- Grupo 2 (Cópia para loop infinito suave) -->
+        <img src="https://raw.githubusercontent.com/legendragon03453-dot/cabelinho/main/ALBINS/CO%20C%201%201_1x.webp" alt="">
+        <img src="https://raw.githubusercontent.com/legendragon03453-dot/cabelinho/main/ALBINS/CO%20C%202%201_1x.webp" alt="">
+        <img src="https://raw.githubusercontent.com/legendragon03453-dot/cabelinho/main/ALBINS/CO%20C%203%201_1x.webp" alt="">
+        <img src="https://raw.githubusercontent.com/legendragon03453-dot/cabelinho/main/ALBINS/CO%20C%204%201_1x.webp" alt="">
+        <img src="https://raw.githubusercontent.com/legendragon03453-dot/cabelinho/main/ALBINS/CO%20C%205%201_1x.webp" alt="">
+        <img src="https://raw.githubusercontent.com/legendragon03453-dot/cabelinho/main/ALBINS/CO%20C%206%201_1x.webp" alt="">
+      </div>
+    </div>
+    <p class="sec4-text">Ouça agora no Spotify as músicas de <strong>Cabelinho</strong></p>
+    <a href="#" class="sec4-btn">SAIBA MAIS</a>
+  </section>
+
   <!-- Personagem e fotos: elemento compartilhado, posicionado por JS -->
-  <img id="sharedChar" class="shared-char"
-    src="https://raw.githubusercontent.com/legendragon03453-dot/cabelinho/main/PERSONAGEM.webp"
-    alt="MC Cabelinho">
-  <div id="sharedPhotos" class="shared-photos">
+  <img id="sharedChar" class="shared-char" src="https://raw.githubusercontent.com/legendragon03453-dot/cabelinho/main/PERSONAGEM.webp" alt="MC Cabelinho" style="opacity: 0; left: 395.631px;">
+  <div id="sharedPhotos" class="shared-photos" style="opacity: 0; right: 201.667px; bottom: 134.333px;">
     <img src="https://raw.githubusercontent.com/legendragon03453-dot/cabelinho/main/export_2026-06-26T15_30_59-457Z/cabeli%201_1x.webp" alt="">
     <img src="https://raw.githubusercontent.com/legendragon03453-dot/cabelinho/main/export_2026-06-26T15_30_59-457Z/caido%201_1x.webp" alt="">
+  </div>
+
+  <!-- Álbuns flutuantes usados na transição da Sec 3 para a Sec 4 -->
+  <div id="sharedAlbums" class="shared-albums">
+    <img src="https://raw.githubusercontent.com/legendragon03453-dot/cabelinho/main/ALBINS/CO%20C%201%201_1x.webp" alt="">
+    <img src="https://raw.githubusercontent.com/legendragon03453-dot/cabelinho/main/ALBINS/CO%20C%202%201_1x.webp" alt="">
+    <img src="https://raw.githubusercontent.com/legendragon03453-dot/cabelinho/main/ALBINS/CO%20C%203%201_1x.webp" alt="">
+    <img src="https://raw.githubusercontent.com/legendragon03453-dot/cabelinho/main/ALBINS/CO%20C%204%201_1x.webp" alt="">
+    <img src="https://raw.githubusercontent.com/legendragon03453-dot/cabelinho/main/ALBINS/CO%20C%205%201_1x.webp" alt="">
+    <img src="https://raw.githubusercontent.com/legendragon03453-dot/cabelinho/main/ALBINS/CO%20C%206%201_1x.webp" alt="">
   </div>
 
   <script>
@@ -206,6 +316,14 @@
     const sec3     = document.getElementById('sec3');
     const sharedChar   = document.getElementById('sharedChar');
     const sharedPhotos = document.getElementById('sharedPhotos');
+
+    const sec3Grid = document.querySelector('.sec3-grid');
+    const sec3Items = document.querySelectorAll('.sec3-grid img');
+    const sec4 = document.getElementById('sec4');
+    const marqueeTrack = document.getElementById('marqueeTrack');
+    const sec4Targets = document.querySelectorAll('#marqueePlaceholder img');
+    const sharedAlbumsContainer = document.getElementById('sharedAlbums');
+    const sharedAlbumImgs = document.querySelectorAll('.shared-albums img');
 
     // ── LOADER ─────────────────────────────────────────────────
     function hideLoader() { loader.classList.add('gone'); }
@@ -221,37 +339,98 @@
     function easeInOut(t) { return t < 0.5 ? 2*t*t : -1 + (4 - 2*t)*t; }
 
     // ── SHARED ELEMENT: personagem + fotos ─────────────────────
-    // Tudo calculado no scroll handler (contínuo, sem zona morta = sem flash).
-    // Sem CSS transition no opacity, então setar '1' repetido é no-op (não pisca).
     function updateSharedElements() {
       const sec2Rect = sec2.getBoundingClientRect();
       const sec3Rect = sec3.getBoundingClientRect();
       const vw = window.innerWidth;
       const vh = window.innerHeight;
 
-      // Visível desde que sec2 ocupe a tela até sec3 sair completamente.
-      const visible = sec2Rect.top <= vh * 0.5 && sec3Rect.bottom > 0;
-      if (!visible) {
-        sharedChar.style.opacity   = '0';
+      // Se a Sec2 ainda não entrou na tela, ou se a Sec3 já passou inteira, esconde.
+      if (sec2Rect.top >= vh || sec3Rect.bottom <= 0) {
+        sharedChar.style.opacity = '0';
         sharedPhotos.style.opacity = '0';
         return;
       }
-      sharedChar.style.opacity   = '1';
+
+      sharedChar.style.opacity = '1';
       sharedPhotos.style.opacity = '1';
 
-      // t=0: centralizado (sec2)  |  t=1: à direita (sec3)
-      const inSec3 = sec3Rect.bottom > 0 && sec3Rect.top < vh;
+      // 1. Efeito de Entrada e Saída: "Prende" os elementos nas seções
+      // Quando a Sec2 sobe, entryOffsetY empurra pra baixo.
+      // Quando a Sec3 sobe e sai da tela, exitOffsetY empurra pra cima!
+      const entryOffsetY = Math.max(0, sec2Rect.top);
+      const exitOffsetY  = Math.min(0, sec3Rect.top);
+      const totalOffsetY = entryOffsetY + exitOffsetY;
+
+      // 2. Transição (t): Calcula o movimento horizontal apenas quando a Sec3 começa a aparecer.
       let t = 0;
-      if (inSec3) t = Math.max(0, Math.min(1, (vh - sec3Rect.top) / vh));
+      if (sec3Rect.top < vh) {
+        t = Math.max(0, Math.min(1, (vh - sec3Rect.top) / vh));
+      }
       const te = easeInOut(t);
 
       const charW = sharedChar.offsetWidth || vw * 0.38;
+
+      // Personagem: centro → direita
       const charLeft0 = (vw - charW) / 2;
       const charLeft1 = vw * 0.98 - charW;
       sharedChar.style.left = (charLeft0 + (charLeft1 - charLeft0) * te) + 'px';
+      sharedChar.style.transform = `translateY(${totalOffsetY}px)`;
 
-      sharedPhotos.style.right  = (vw * (0.14 + 0.13 * te)) + 'px';
-      sharedPhotos.style.bottom = (vh * (0.197 - 0.087 * te)) + 'px';
+      // Fotos: bottom-right de sec2 → centro-direita de sec3
+      const photo0Right  = vw  * 0.14;
+      const photo1Right  = vw  * 0.27;
+      const photo0Bottom = vh  * 0.197;
+      const photo1Bottom = vh  * 0.11;
+
+      sharedPhotos.style.right  = (photo0Right  + (photo1Right  - photo0Right)  * te) + 'px';
+      sharedPhotos.style.bottom = (photo0Bottom + (photo1Bottom - photo0Bottom) * te) + 'px';
+      sharedPhotos.style.transform = `translateY(${totalOffsetY}px)`;
+
+      // ── TRANSIÇÃO DOS ÁLBUNS (Sec 3 -> Sec 4) ──
+      const sec4Rect = sec4.getBoundingClientRect();
+      let p4 = 0;
+      if (sec4Rect.top < vh && sec4Rect.bottom > 0) {
+        // Quando a Sec4 sobe, o top vai de 'vh' até 0
+        p4 = 1 - (sec4Rect.top / vh);
+        p4 = Math.max(0, Math.min(1, p4));
+      } else if (sec4Rect.top <= 0) {
+        p4 = 1;
+      }
+
+      if (p4 > 0 && p4 < 1) {
+        sec3Grid.style.opacity = '0';
+        if (marqueeTrack) marqueeTrack.style.opacity = '0';
+        sharedAlbumsContainer.style.opacity = '1';
+        sharedAlbumsContainer.style.visibility = 'visible';
+
+        for (let i = 0; i < 6; i++) {
+          const rect3 = sec3Items[i].getBoundingClientRect();
+          const rect4 = sec4Targets[i].getBoundingClientRect();
+
+          // Usando linear progress para colar as imagens ao movimento do scroll
+          const x = rect3.left + (rect4.left - rect3.left) * p4;
+          const y = rect3.top + (rect4.top - rect3.top) * p4;
+          const w = rect3.width + (rect4.width - rect3.width) * p4;
+          const h = rect3.height + (rect4.height - rect3.height) * p4;
+          const br = 10 + (16 - 10) * p4;
+
+          sharedAlbumImgs[i].style.transform = `translate(${x}px, ${y}px)`;
+          sharedAlbumImgs[i].style.width = `${w}px`;
+          sharedAlbumImgs[i].style.height = `${h}px`;
+          sharedAlbumImgs[i].style.borderRadius = `${br}px`;
+        }
+      } else if (p4 === 0) {
+        sec3Grid.style.opacity = '1';
+        if (marqueeTrack) marqueeTrack.style.opacity = '0';
+        sharedAlbumsContainer.style.opacity = '0';
+        sharedAlbumsContainer.style.visibility = 'hidden';
+      } else if (p4 === 1) {
+        sec3Grid.style.opacity = '0';
+        if (marqueeTrack) marqueeTrack.style.opacity = '1';
+        sharedAlbumsContainer.style.opacity = '0';
+        sharedAlbumsContainer.style.visibility = 'hidden';
+      }
     }
 
     // ── RAF LOOP ───────────────────────────────────────────────
@@ -307,10 +486,6 @@
       }
     }, { threshold: 0.01 }).observe(sec2);
 
-    // Recalcula posição quando imagem carrega (caso ainda não tivesse dimensões)
-    sharedChar.addEventListener('load', () => requestAnimationFrame(updateSharedElements));
-    window.addEventListener('resize', () => requestAnimationFrame(updateSharedElements));
-
     // ── SEC2 EXIT + SEC3 REVEAL ────────────────────────────────
     new IntersectionObserver(([entry]) => {
       if (entry.isIntersecting) {
@@ -322,7 +497,5 @@
       }
     }, { threshold: 0.1 }).observe(sec3);
   </script>
-
 </body>
-
 </html>
