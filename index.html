@@ -97,12 +97,12 @@
     .shared-char {
       position: fixed; bottom: 0; height: 96%; width: auto;
       object-fit: contain; z-index: 50; pointer-events: none;
-      opacity: 0; will-change: left, opacity;
+      opacity: 0; transition: opacity 0.4s ease; will-change: left, opacity;
     }
     .shared-photos {
       position: fixed; display: flex; flex-direction: column;
       gap: 0.55rem; z-index: 51; pointer-events: none;
-      opacity: 0; will-change: right, bottom, opacity;
+      opacity: 0; transition: opacity 0.4s ease; will-change: right, bottom, opacity;
     }
     .shared-photos img {
       width: 140px; height: auto; border-radius: 8px; display: block;
@@ -229,8 +229,8 @@
       const vh = window.innerHeight;
 
       const inSec3 = sec3Rect.bottom > 0 && sec3Rect.top < vh;
-      // Personagem só aparece quando sec2 está COMPLETAMENTE na tela (top <= 0)
-      const sec2Ready = sec2Rect.top <= 0 && sec2Rect.bottom > 0;
+      // Aparece quando sec2 está quase ou totalmente no topo (buffer de 20px cobre gaps de pixel)
+      const sec2Ready = sec2Rect.top < 20 && sec2Rect.bottom > 0;
 
       if (!sec2Ready && !inSec3) {
         sharedChar.style.opacity = '0';
@@ -317,6 +317,9 @@
         sec2Video.play().catch(() => {});
       }
     }, { threshold: 0.01 }).observe(sec2);
+
+    // Recalcula posição quando a imagem terminar de carregar
+    sharedChar.addEventListener('load', () => requestAnimationFrame(updateSharedElements));
 
     // ── SEC2 EXIT + SEC3 REVEAL ────────────────────────────────
     new IntersectionObserver(([entry]) => {
