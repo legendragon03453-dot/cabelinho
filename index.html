@@ -97,12 +97,12 @@
     .shared-char {
       position: fixed; bottom: 0; height: 96%; width: auto;
       object-fit: contain; z-index: 50; pointer-events: none;
-      opacity: 0; transition: opacity 0.4s ease; will-change: left, opacity;
+      opacity: 0; will-change: left, opacity;
     }
     .shared-photos {
       position: fixed; display: flex; flex-direction: column;
       gap: 0.55rem; z-index: 51; pointer-events: none;
-      opacity: 0; transition: opacity 0.4s ease; will-change: right, bottom, opacity;
+      opacity: 0; will-change: right, bottom, opacity;
     }
     .shared-photos img {
       width: 140px; height: auto; border-radius: 8px; display: block;
@@ -222,47 +222,54 @@
     function easeInOut(t) { return t < 0.5 ? 2*t*t : -1 + (4 - 2*t)*t; }
 
     // ── SHARED ELEMENT: personagem + fotos ─────────────────────
+    // Visibilidade: controlada por IntersectionObserver (sem flash)
+    // Posição:      controlada pelo scroll handler (sem tocar em opacity)
+    let charShowing = false;
+
+    function showChar() {
+      if (charShowing) return;
+      charShowing = true;
+      sharedChar.style.opacity  = '1';
+      sharedPhotos.style.opacity = '1';
+      updateSharedElements(); // posiciona imediatamente
+    }
+    function hideChar() {
+      charShowing = false;
+      sharedChar.style.opacity  = '0';
+      sharedPhotos.style.opacity = '0';
+    }
+
+    // Aparece quando sec2 está pelo menos 50% visível na tela
+    new IntersectionObserver(([entry]) => {
+      if (entry.isIntersecting) showChar();
+      else if (!sec3.classList.contains('revealed')) hideChar();
+    }, { threshold: 0.5 }).observe(sec2);
+
+    // Permanece visível enquanto sec3 estiver na tela
+    new IntersectionObserver(([entry]) => {
+      if (entry.isIntersecting) showChar();
+      else if (!sec2.classList.contains('revealed')) hideChar();
+    }, { threshold: 0.01 }).observe(sec3);
+
+    // Scroll handler: APENAS posição (nunca toca em opacity)
     function updateSharedElements() {
-      const sec2Rect = sec2.getBoundingClientRect();
+      if (!charShowing) return;
       const sec3Rect = sec3.getBoundingClientRect();
       const vw = window.innerWidth;
       const vh = window.innerHeight;
 
       const inSec3 = sec3Rect.bottom > 0 && sec3Rect.top < vh;
-      // Aparece quando sec2 está quase ou totalmente no topo (buffer de 20px cobre gaps de pixel)
-      const sec2Ready = sec2Rect.top < 20 && sec2Rect.bottom > 0;
-
-      if (!sec2Ready && !inSec3) {
-        sharedChar.style.opacity = '0';
-        sharedPhotos.style.opacity = '0';
-        return;
-      }
-
-      sharedChar.style.opacity = '1';
-      sharedPhotos.style.opacity = '1';
-
-      // t=0: totalmente em sec2  |  t=1: totalmente em sec3
       let t = 0;
-      if (inSec3) {
-        t = Math.max(0, Math.min(1, (vh - sec3Rect.top) / vh));
-      }
+      if (inSec3) t = Math.max(0, Math.min(1, (vh - sec3Rect.top) / vh));
       const te = easeInOut(t);
 
       const charW = sharedChar.offsetWidth || vw * 0.38;
-
-      // Personagem: centro → direita
       const charLeft0 = (vw - charW) / 2;
       const charLeft1 = vw * 0.98 - charW;
       sharedChar.style.left = (charLeft0 + (charLeft1 - charLeft0) * te) + 'px';
 
-      // Fotos: bottom-right de sec2 → centro-direita de sec3
-      const photo0Right  = vw  * 0.14;
-      const photo1Right  = vw  * 0.27;
-      const photo0Bottom = vh  * 0.197;
-      const photo1Bottom = vh  * 0.11;
-
-      sharedPhotos.style.right  = (photo0Right  + (photo1Right  - photo0Right)  * te) + 'px';
-      sharedPhotos.style.bottom = (photo0Bottom + (photo1Bottom - photo0Bottom) * te) + 'px';
+      sharedPhotos.style.right  = (vw * (0.14 + 0.13 * te)) + 'px';
+      sharedPhotos.style.bottom = (vh * (0.197 - 0.087 * te)) + 'px';
     }
 
     // ── RAF LOOP ───────────────────────────────────────────────
@@ -318,8 +325,8 @@
       }
     }, { threshold: 0.01 }).observe(sec2);
 
-    // Recalcula posição quando a imagem terminar de carregar
-    sharedChar.addEventListener('load', () => requestAnimationFrame(updateSharedElements));
+    // Recalcula posição quando imagem carrega (caso ainda não tivesse dimensões)
+    sharedChar.addEventListener('load', () => { if (charShowing) requestAnimationFrame(updateSharedElements); });
 
     // ── SEC2 EXIT + SEC3 REVEAL ────────────────────────────────
     new IntersectionObserver(([entry]) => {
