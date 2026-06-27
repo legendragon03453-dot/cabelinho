@@ -58,10 +58,9 @@
     /* ── SEÇÃO 2 ── */
     .sec2 {
       position: relative; height: 100vh; overflow: hidden;
-      background: #040005; opacity: 0; transition: opacity 0.35s ease;
+      background: #040005;
       --gutter: 14vw;
     }
-    .sec2.revealed { opacity: 1; }
 
     .sec2-bg {
       position: absolute; inset: -2%; width: 104%; height: 104%;
@@ -222,42 +221,25 @@
     function easeInOut(t) { return t < 0.5 ? 2*t*t : -1 + (4 - 2*t)*t; }
 
     // ── SHARED ELEMENT: personagem + fotos ─────────────────────
-    // Visibilidade: controlada por IntersectionObserver (sem flash)
-    // Posição:      controlada pelo scroll handler (sem tocar em opacity)
-    let charShowing = false;
-
-    function showChar() {
-      if (charShowing) return;
-      charShowing = true;
-      sharedChar.style.opacity  = '1';
-      sharedPhotos.style.opacity = '1';
-      updateSharedElements(); // posiciona imediatamente
-    }
-    function hideChar() {
-      charShowing = false;
-      sharedChar.style.opacity  = '0';
-      sharedPhotos.style.opacity = '0';
-    }
-
-    // Aparece quando sec2 está pelo menos 50% visível na tela
-    new IntersectionObserver(([entry]) => {
-      if (entry.isIntersecting) showChar();
-      else if (!sec3.classList.contains('revealed')) hideChar();
-    }, { threshold: 0.5 }).observe(sec2);
-
-    // Permanece visível enquanto sec3 estiver na tela
-    new IntersectionObserver(([entry]) => {
-      if (entry.isIntersecting) showChar();
-      else if (!sec2.classList.contains('revealed')) hideChar();
-    }, { threshold: 0.01 }).observe(sec3);
-
-    // Scroll handler: APENAS posição (nunca toca em opacity)
+    // Tudo calculado no scroll handler (contínuo, sem zona morta = sem flash).
+    // Sem CSS transition no opacity, então setar '1' repetido é no-op (não pisca).
     function updateSharedElements() {
-      if (!charShowing) return;
+      const sec2Rect = sec2.getBoundingClientRect();
       const sec3Rect = sec3.getBoundingClientRect();
       const vw = window.innerWidth;
       const vh = window.innerHeight;
 
+      // Visível desde que sec2 ocupe a tela até sec3 sair completamente.
+      const visible = sec2Rect.top <= vh * 0.5 && sec3Rect.bottom > 0;
+      if (!visible) {
+        sharedChar.style.opacity   = '0';
+        sharedPhotos.style.opacity = '0';
+        return;
+      }
+      sharedChar.style.opacity   = '1';
+      sharedPhotos.style.opacity = '1';
+
+      // t=0: centralizado (sec2)  |  t=1: à direita (sec3)
       const inSec3 = sec3Rect.bottom > 0 && sec3Rect.top < vh;
       let t = 0;
       if (inSec3) t = Math.max(0, Math.min(1, (vh - sec3Rect.top) / vh));
@@ -326,7 +308,8 @@
     }, { threshold: 0.01 }).observe(sec2);
 
     // Recalcula posição quando imagem carrega (caso ainda não tivesse dimensões)
-    sharedChar.addEventListener('load', () => { if (charShowing) requestAnimationFrame(updateSharedElements); });
+    sharedChar.addEventListener('load', () => requestAnimationFrame(updateSharedElements));
+    window.addEventListener('resize', () => requestAnimationFrame(updateSharedElements));
 
     // ── SEC2 EXIT + SEC3 REVEAL ────────────────────────────────
     new IntersectionObserver(([entry]) => {
